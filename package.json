@@ -1,0 +1,39 @@
+{
+  "author": {
+    "name": "Alexandre Tiertant",
+    "email": "a.tiertant@atlantis-software.net"
+  },
+  "bugs": {
+    "url": "https://github.com/Atlantis-Software/telepathymq/issues"
+  },
+  "dependencies": {
+    "amp": "~0.3.1",
+    "amp-message": "~0.1.2",
+    "asynk": "~0.0.12",
+    "uuid": "~3.0.1"
+  },
+  "deprecated": false,
+  "description": "ipc for node",
+  "devDependencies": {
+    "mocha": "^3.2.0"
+  },
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "homepage": "https://github.com/Atlantis-Software/telepathymq",
+  "keywords": [
+    "ipc",
+    "inter-process"
+  ],
+  "license": "MIT",
+  "main": "./index.js",
+  "name": "telepathymq",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Atlantis-Software/telepathymq.git"
+  },
+  "scripts": {
+    "test": "node ./test/runner.js"
+  },
+  "version": "0.0.1"
+}

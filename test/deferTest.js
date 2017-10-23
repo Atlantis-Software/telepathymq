@@ -62,6 +62,14 @@ describe('defer', function() {
     client.defer('server', 'myDefer', {msg: 'some data'});
   });
 
+  it('defer event should receive Buffer data', function(done) {
+    server.on('myDefer', function(defer, data) {
+      assert.deepEqual(data.buffer, Buffer.from('this a Buffer'));
+      done();
+    });
+    client.defer('server', 'myDefer', {buffer: Buffer.from('this a Buffer')});
+  });
+
   afterEach(function() {
     server.removeAllListeners();
     client.removeAllListeners();

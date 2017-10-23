@@ -10,6 +10,7 @@ var url = require('url');
 var net = require('net');
 var fs = require('fs');
 var tls = require('tls');
+var _ = require('lodash');
 
 /**
  * Errors to ignore.
@@ -322,6 +323,12 @@ module.exports = function(debug) {
         delete self.callbacks[id];
         return fn(emitter);
       }
+
+      args = _.cloneDeepWith(args, function(entry) {
+        if (_.isObject(entry) && entry.type === 'Buffer' && entry.data) {
+          return new Buffer(entry.data);
+        }
+      });
 
       args.unshift('message');
       args.push(emitter);

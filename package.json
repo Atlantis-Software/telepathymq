@@ -11,6 +11,7 @@
     "amp-message": "~0.1.2",
     "asynk": "~0.0.12",
     "lodash": "4.17.4",
+    "through2": "~2.0.3",
     "uuid": "~3.0.1"
   },
   "deprecated": false,

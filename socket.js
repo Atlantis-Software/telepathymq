@@ -345,11 +345,11 @@ module.exports = function(debug) {
         args.push(id);
 
         if (sock.writable) {
-          sock.write(self.pack(args), function(){ fn(true) });
+          sock.write(self.pack(args), function(){ fn(true); });
           return true;
         } else {
           debug('trace', 'peer went away');
-          process.nextTick(function(){ fn(false) });
+          process.nextTick(function(){ fn(false); });
           return false;
         }
       }

@@ -6,3 +6,4 @@ examples
 test
 test.crt
 test.key
+.nyc_output/

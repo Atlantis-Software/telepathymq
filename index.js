@@ -16,7 +16,7 @@ var telepathymq = module.exports = function(identity) {
 inherits(telepathymq, EventEmitter);
 
 var deferHandler = function(self, task, event, emitter) {
-  switch(task) {
+  switch (task) {
     case 'defer.resolve':
       if (self.defers[event.id]) {
         self.defers[event.id].resolve(event.data);
@@ -53,8 +53,8 @@ var deferHandler = function(self, task, event, emitter) {
   }
 };
 
-var eventHandler = function(self, task, event, emitter) {
-  switch(task) {
+var eventHandler = function(self, task, event) {
+  switch (task) {
     case 'event.emit':
       EventEmitter.prototype.emit.call(self, event.name, event.data);
       break;
@@ -87,7 +87,7 @@ telepathymq.prototype.listen = function(port, host, fn) {
     sock.bind(port, host, fn);
   }
   this.socks.push(sock);
-}
+};
 
 telepathymq.prototype.register = function(identity, connectString, options, cb) {
   var self = this;
@@ -116,7 +116,7 @@ telepathymq.prototype.register = function(identity, connectString, options, cb) 
     eventHandler(self, task, event, emitter);
   });
   this.socks.push(sock);
-}
+};
 
 telepathymq.prototype.defer = function(identity, eventName, data) {
   var defer = asynk.deferred();
@@ -134,7 +134,7 @@ telepathymq.prototype.defer = function(identity, eventName, data) {
   };
   emitter.emit('defer.new', event);
   return defer.promise();
-}
+};
 
 telepathymq.prototype.emit = function(identity, eventName, data) {
   var emitter = this.relations[identity];
@@ -147,11 +147,11 @@ telepathymq.prototype.emit = function(identity, eventName, data) {
   };
   emitter.emit('event.emit', event);
   return true;
-}
+};
 
 telepathymq.prototype.close = function(cb) {
   cb = cb || new Function();
   asynk.each(this.socks, function(sock, cb) {
     sock.close(cb);
   }).parallel().asCallback(cb);
-}
+};

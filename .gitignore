@@ -4,3 +4,4 @@ package-lock.json
 node_modules
 test.crt
 test.key
+.nyc_output/

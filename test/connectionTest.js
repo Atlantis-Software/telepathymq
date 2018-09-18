@@ -44,6 +44,36 @@ describe('connection', function() {
     });
   });
 
+  it('should reconnect after disconnection', function(done) {
+    var cnxCount = 0;
+
+    var tlsOpts = {
+      requestCert: true,
+      rejectUnauthorized: true,
+      key: fs.readFileSync('test.key'),
+      cert: fs.readFileSync('test.crt'),
+      ca: [fs.readFileSync('test.crt')]
+    };
+
+    client.on('register', function(identity) {
+      assert.equal(identity, 'server');
+      ++cnxCount;
+      if (cnxCount === 1) {
+        server.close();
+        setTimeout(function() {
+          server.listen('tls://localhost:8060', tlsOpts);
+        }, 100);
+      }
+      if (cnxCount === 2) {
+        done();
+      }
+    });
+
+    server.listen('tls://localhost:8060', tlsOpts);
+    client.register('server', 'tls://localhost:8060', tlsOpts);
+
+  });
+
   afterEach(function(done) {
     server.removeAllListeners();
     client.removeAllListeners();

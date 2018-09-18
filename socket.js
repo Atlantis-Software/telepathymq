@@ -275,11 +275,12 @@ module.exports = function(debug) {
   Socket.prototype.handleErrors = function(sock){
     var self = this;
     sock.on('error', function(err){
-
       debug('error', self.type + ' error ' + err.code || err.message);
       self.emit('socket error', err);
       self.removeSocket(sock);
-      if (!~ignore.indexOf(err.code)) return self.emit('error', err);
+      if (!~ignore.indexOf(err.code)) {
+        return self.emit('error', err);
+      }
       debug('trace', self.type + ' ignored ' + err.code);
       self.emit('ignored error', err);
     });
@@ -420,37 +421,25 @@ module.exports = function(debug) {
       sock.on('connect', onConnect);
     }
 
-    var onError = function(err) {
-      if (err.code === 'ECONNREFUSED') {
-        var retry = self.retry || self.get('retry timeout');
-        setTimeout(function(){
-          debug('trace', self.type + ' attempting reconnect');
-          self.emit('reconnect attempt');
-          sock.destroy();
-          sock.removeListener('error', onError);
-          self.connect(identity, port, host, fn);
-          self.retry = Math.round(Math.min(max, retry * 1.5));
-        }, retry);
-      }
-    };
-    sock.on('error', onError);
-
     sock.identity = identity;
     sock.setNoDelay();
 
     this.handleErrors(sock);
 
     sock.on('close', function() {
+      sock.removeAllListeners();
+      sock.destroy();
       self.emit('socket close', sock.identity);
       self.connected = false;
       self.removeSocket(sock);
-      if (self.closing) return self.emit('close');
+      if (self.closing) {
+        return self.emit('close');
+      }
       var retry = self.retry || self.get('retry timeout');
       setTimeout(function(){
         debug('trace', self.type + ' attempting reconnect');
         self.emit('reconnect attempt');
-        sock.destroy();
-        self.connect(identity, port, host);
+        self.connect(identity, port, host, fn);
         self.retry = Math.round(Math.min(max, retry * 1.5));
       }, retry);
     });

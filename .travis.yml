@@ -1,6 +1,9 @@
 language: node_js
 before_script:
+  - sudo apt-get install -y datefudge
   - openssl req -newkey rsa:2048 -nodes -keyout test.key -x509 -days 365 -out test.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
+  - datefudge $(date -d "+2 years" +"%m/%d/%Y") openssl req -newkey rsa:2048 -nodes -keyout notYet.key -x509 -days 365 -out notYet.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
+  - datefudge $(date -d "-2 years" +"%m/%d/%Y") openssl req -newkey rsa:2048 -nodes -keyout tooLate.key -x509 -days 365 -out tooLate.crt -subj /CN=localhost/C=fr/ST=rhone/L=lyon/O=atlantis-software/OU=synapps/emailAddress=test@localhost
 node_js:
   - '6'
   - '8'

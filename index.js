@@ -4,11 +4,11 @@ var asynk = require('asynk');
 var uuid = require('uuid');
 var inherits = require('util').inherits;
 
-var telepathymq = module.exports = function(identity) {
+var telepathymq = module.exports = function(identity, debugFunction) {
   EventEmitter.call(this);
   this.identity = identity;
   this.relations = {};
-  this.debug = new Function();
+  this.debug = debugFunction || new Function();
   this.defers = {};
   this.socks = [];
 };

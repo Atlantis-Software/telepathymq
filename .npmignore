@@ -6,4 +6,8 @@ examples
 test
 test.crt
 test.key
+notYet.crt
+notYet.key
+tooLate.crt
+tooLate.key
 .nyc_output/

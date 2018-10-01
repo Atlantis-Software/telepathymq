@@ -11,6 +11,7 @@ var net = require('net');
 var fs = require('fs');
 var tls = require('tls');
 var _ = require('lodash');
+var x509 = require('x509');
 
 /**
  * Errors to ignore.
@@ -357,6 +358,31 @@ module.exports = function(debug) {
     };
   };
 
+  Socket.prototype.checkCertificateValidity = function(certificate) {
+    certificate = x509.parseCert(certificate.toString());
+    if (!certificate) {
+      debug('error', this.type + ' no certificate');
+      return false;
+    }
+    var valid_from = new Date(certificate.notBefore);
+    var valid_to = new Date(certificate.notAfter);
+    var now = new Date();
+    if (now - valid_from < 0) {
+      debug('error', this.type + ' certificate not yet in effect');
+      debug('error', this.type + ' certificate will become valid the ' + valid_from.toJSON());
+      return false;
+    }
+    var dateDiff = now - valid_to;
+    if (dateDiff >= 0) {
+      debug('error', this.type + ' certificate expired the ' + valid_to.toJSON());
+      return false;
+    }
+    if (dateDiff / (1000 * 60 * 60 * 24) >= -30) {
+      debug('warn', this.type + ' certificate will soon expire : ' + valid_to.toJSON());
+    }
+    return true;
+  };
+
 
   /**
    * Connect to `port` at `host` and invoke `fn()`.
@@ -399,6 +425,12 @@ module.exports = function(debug) {
     this.type = 'client';
     var sock;
     var tlsOpts = this.get('tls');
+
+    if (tlsOpts && tlsOpts.cert) {
+      if (!this.checkCertificateValidity(tlsOpts.cert)) {
+        throw new Error('Invalid certificate');
+      }
+    }
 
     var onConnect = function() {
       debug('trace', self.type + ' connect');
@@ -555,6 +587,12 @@ module.exports = function(debug) {
     this.type = 'server';
 
     var tlsOptions = this.get('tls');
+
+    if (tlsOptions && tlsOptions.cert) {
+      if (!this.checkCertificateValidity(tlsOptions.cert)) {
+        throw new Error('Invalid certificate');
+      }
+    }
     if (tlsOptions) {
       tlsOptions.requestCert = tlsOptions.requestCert !== false;
       tlsOptions.rejectUnauthorized = tlsOptions.rejectUnauthorized !== false;

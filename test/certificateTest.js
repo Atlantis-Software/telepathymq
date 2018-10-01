@@ -2,7 +2,7 @@ var assert = require('assert');
 var fs = require('fs');
 var Ipc = require('../index');
 
-describe('connection', function() {
+describe('certificate', function() {
 
   var server = new Ipc('server');
   var client = new Ipc('client');

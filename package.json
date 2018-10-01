@@ -11,7 +11,8 @@
     "amp-message": "~0.1.2",
     "asynk": "~0.0.12",
     "lodash": "4.17.11",
-    "uuid": "~3.3.2"
+    "uuid": "~3.3.2",
+    "x509": "~0.3.3"
   },
   "deprecated": false,
   "description": "ipc for node",
@@ -42,5 +43,5 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint ./"
   },
-  "version": "0.0.3"
+  "version": "0.0.4"
 }

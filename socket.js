@@ -4,8 +4,7 @@
  */
 
 var Emitter = require('events').EventEmitter;
-var Message = require('amp-message');
-var Parser = require('amp').Stream;
+var msgpack = require('msgpack5')();
 var url = require('url');
 var net = require('net');
 var fs = require('fs');
@@ -149,8 +148,7 @@ module.exports = function(debug) {
    */
 
   Socket.prototype.pack = function(args){
-    var msg = new Message(args);
-    return msg.toBuffer();
+    return msgpack.encode(args).slice();
   };
 
   /**
@@ -253,11 +251,9 @@ module.exports = function(debug) {
    */
 
   Socket.prototype.addSocket = function(sock){
-    var parser = new Parser;
     var i = this.socks.push(sock) - 1;
     debug('trace', this.type + ' add socket ' + i);
-    sock.pipe(parser);
-    parser.on('data', this.onmessage(sock));
+    sock.on('data', this.onmessage(sock));
   };
 
   /**
@@ -304,8 +300,7 @@ module.exports = function(debug) {
     var self = this;
 
     return function (buf){
-      var msg = new Message(buf);
-      var args = msg.args;
+      var args = msgpack.decode(buf);
       var id = args.pop();
       var task = args[0];
       var emitter = {

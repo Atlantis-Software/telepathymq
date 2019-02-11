@@ -7,10 +7,9 @@
     "url": "https://github.com/Atlantis-Software/telepathymq/issues"
   },
   "dependencies": {
-    "amp": "~0.3.1",
-    "amp-message": "~0.1.2",
     "asynk": "~0.0.12",
     "lodash": "4.17.11",
+    "msgpack5": "~4.2.1",
     "uuid": "~3.3.2",
     "x509": "~0.3.3"
   },
@@ -43,5 +42,5 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint ./"
   },
-  "version": "0.0.4"
+  "version": "0.1.0"
 }

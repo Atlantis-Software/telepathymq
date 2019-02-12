@@ -253,7 +253,9 @@ module.exports = function(debug) {
   Socket.prototype.addSocket = function(sock){
     var i = this.socks.push(sock) - 1;
     debug('trace', this.type + ' add socket ' + i);
-    sock.on('data', this.onmessage(sock));
+    var decoder = msgpack.decoder();
+    sock.pipe(decoder);
+    decoder.on('data', this.onmessage(sock));
   };
 
   /**
@@ -299,8 +301,7 @@ module.exports = function(debug) {
   Socket.prototype.onmessage = function(sock){
     var self = this;
 
-    return function (buf){
-      var args = msgpack.decode(buf);
+    return function(args){
       var id = args.pop();
       var task = args[0];
       var emitter = {

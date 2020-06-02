@@ -10,7 +10,7 @@ var net = require('net');
 var fs = require('fs');
 var tls = require('tls');
 var _ = require('lodash');
-var x509 = require('x509');
+var forge = require('node-forge');
 
 /**
  * Errors to ignore.
@@ -355,13 +355,13 @@ module.exports = function(debug) {
   };
 
   Socket.prototype.checkCertificateValidity = function(certificate) {
-    certificate = x509.parseCert(certificate.toString());
+    certificate = forge.pki.certificateFromPem(certificate.toString());
     if (!certificate) {
       debug('error', this.type + ' no certificate');
       return false;
     }
-    var valid_from = new Date(certificate.notBefore);
-    var valid_to = new Date(certificate.notAfter);
+    var valid_from = new Date(certificate.validity.notBefore);
+    var valid_to = new Date(certificate.validity.notAfter);
     var now = new Date();
     if (now - valid_from < 0) {
       debug('error', this.type + ' certificate not yet in effect');
@@ -631,6 +631,16 @@ module.exports = function(debug) {
 
     this.server.listen(port, host, fn);
     return this;
+  };
+
+  Socket.prototype.addCa = function(ca){
+    var tls = this.get('tls');
+    if (!tls) {
+      throw new Error('no tls options found');
+    }
+    tls.ca = tls.ca || [];
+    tls.ca.push(ca);
+    this.server.setSecureContext(tls);
   };
 
   return Socket;

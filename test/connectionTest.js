@@ -44,6 +44,23 @@ describe('connection', function() {
     });
   });
 
+  it('should connect using tls protocol after adding ca', function(done) {
+    client.on('register', function(identity) {
+      assert.equal(identity, 'server');
+      done();
+    });
+    var tlsOpts = {
+      requestCert: true,
+      rejectUnauthorized: true,
+      key: fs.readFileSync('test.key'),
+      cert: fs.readFileSync('test.crt')
+    };
+    var sock = server.listen('tls://localhost:8060', tlsOpts, function() {
+      sock.addCa(fs.readFileSync('test.crt'));
+      client.register('server', 'tls://localhost:8060', tlsOpts);
+    });
+  });
+
   it('should reconnect after disconnection', function(done) {
     var cnxCount = 0;
 

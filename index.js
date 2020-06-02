@@ -87,6 +87,7 @@ telepathymq.prototype.listen = function(port, host, fn) {
     sock.bind(port, host, fn);
   }
   this.socks.push(sock);
+  return sock;
 };
 
 telepathymq.prototype.register = function(identity, connectString, options, cb) {

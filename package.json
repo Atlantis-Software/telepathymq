@@ -8,10 +8,10 @@
   },
   "dependencies": {
     "asynk": "~0.0.12",
-    "lodash": "4.17.11",
+    "lodash": "~4.17.15",
     "msgpack5": "~4.2.1",
-    "uuid": "~3.3.2",
-    "x509": "~0.3.3"
+    "uuid": "~8.1.0",
+    "node-forge": "~0.9.1"
   },
   "deprecated": false,
   "description": "ipc for node",
@@ -42,5 +42,5 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint ./"
   },
-  "version": "0.1.1"
+  "version": "0.1.2"
 }

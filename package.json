@@ -11,7 +11,7 @@
     "lodash": "~4.17.15",
     "msgpack5": "~4.2.1",
     "uuid": "~8.1.0",
-    "node-forge": "~0.9.1"
+    "node-forge": "~0.10.0"
   },
   "deprecated": false,
   "description": "ipc for node",

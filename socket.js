@@ -635,7 +635,7 @@ module.exports = function(debug) {
     return this;
   };
 
-  Socket.prototype.addCa = function(ca){
+  Socket.prototype.addCa = function(ca, callback){
     var self = this;
     var tlsOptions = this.get('tls');
     if (!tlsOptions) {
@@ -655,7 +655,6 @@ module.exports = function(debug) {
           }
           return;
         }
-        console.log(self.get('port'), self.get('host'));
         self.bind(self.get('port'), self.get('host'), function(err) {
           if (err) {
             self.emit('error', err);

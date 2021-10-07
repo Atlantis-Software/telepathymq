@@ -581,6 +581,8 @@ module.exports = function(debug) {
     }
 
     this.type = 'server';
+    this.set('host', host);
+    this.set('port', port);
 
     var tlsOptions = this.get('tls');
 
@@ -634,13 +636,40 @@ module.exports = function(debug) {
   };
 
   Socket.prototype.addCa = function(ca){
-    var tls = this.get('tls');
-    if (!tls) {
+    var self = this;
+    var tlsOptions = this.get('tls');
+    if (!tlsOptions) {
       throw new Error('no tls options found');
     }
-    tls.ca = tls.ca || [];
-    tls.ca.push(ca);
-    this.server.setSecureContext(tls);
+    tlsOptions.ca = tls.ca || [];
+    tlsOptions.ca.push(ca);
+    if (_.isFunction(this.server.setSecureContext)) {
+      this.server.setSecureContext(tls);
+    } else {
+      this.set('tls', tlsOptions);
+      this.server.close(function(err) {
+        if (err) {
+          self.emit('error', err);
+          if (callback) {
+            callback(err);
+          }
+          return;
+        }
+        console.log(self.get('port'), self.get('host'));
+        self.bind(self.get('port'), self.get('host'), function(err) {
+          if (err) {
+            self.emit('error', err);
+            if (callback) {
+              callback(err);
+            }
+            return;
+          }
+          if (callback) {
+            callback();
+          }
+        });
+      });
+    }
   };
 
   return Socket;

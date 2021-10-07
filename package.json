@@ -42,5 +42,5 @@
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
     "lint": "eslint ./"
   },
-  "version": "0.1.3"
+  "version": "0.1.4"
 }

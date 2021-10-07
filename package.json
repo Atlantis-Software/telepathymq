@@ -8,8 +8,8 @@
   },
   "dependencies": {
     "asynk": "~0.0.12",
-    "lodash": "~4.17.20",
-    "msgpack5": "~4.4.0",
+    "lodash": "~4.17.21",
+    "msgpack5": "~5.3.2",
     "uuid": "~8.3.2",
     "node-forge": "~0.10.0"
   },
